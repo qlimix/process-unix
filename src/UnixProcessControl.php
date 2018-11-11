@@ -126,11 +126,14 @@ final class UnixProcessControl implements ProcessControlInterface
     /**
      * @inheritDoc
      */
-    public function startProcesses(array $processes): int
+    public function startProcesses(array $processes): array
     {
+        $pids = [];
         foreach ($processes as $process) {
-            $this->startProcess($process);
+            $pids[] = $this->startProcess($process);
         }
+
+        return $pids;
     }
 
     /**
