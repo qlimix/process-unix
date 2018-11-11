@@ -1,0 +1,34 @@
+{
+    "name": "qlimix/unix-process-control",
+    "type": "package",
+    "license": "LGPL-3.0-only",
+    "authors": [
+        {
+            "name": "frank",
+            "email": "frank@qlimix.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Qlimix\\Process\\": "src/"
+        }
+    },
+    "require": {
+        "qlimix/process": "dev-master",
+        "ext-pcntl": "*",
+        "ext-posix": "*"
+    },
+    "suggest": {
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:qlimix/process.git"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
