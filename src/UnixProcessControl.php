@@ -110,8 +110,9 @@ final class UnixProcessControl implements ProcessControlInterface
         }
 
         if ($pid > 0) {
-            $this->processes[$this->nextPid++] = $pid;
-            return $pid;
+            $internalPid = $this->nextPid++;
+            $this->processes[$internalPid] = $pid;
+            return $internalPid;
         }
 
         try {
