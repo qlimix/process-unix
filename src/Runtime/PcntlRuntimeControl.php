@@ -8,6 +8,16 @@ final class PcntlRuntimeControl implements RuntimeControlInterface
     private $quit = false;
 
     /**
+     * @param array $signals
+     */
+    public function __construct(array $signals)
+    {
+        foreach ($signals as $signal) {
+            $this->registerSignal($signal);
+        }
+    }
+
+    /**
      * @inheritdoc
      */
     public function tick(): void
@@ -23,12 +33,9 @@ final class PcntlRuntimeControl implements RuntimeControlInterface
         return $this->quit;
     }
 
-    public function init(): void
+    private function registerSignal(int $signal): void
     {
-        pcntl_signal(SIGHUP, [$this, 'signal']);
-        pcntl_signal(SIGTERM, [$this, 'signal']);
-        pcntl_signal(SIGINT, [$this, 'signal']);
-        pcntl_signal(SIGQUIT, [$this, 'signal']);
+        pcntl_signal($signal, [$this, 'signal']);
     }
 
     public function signal($signal): void
