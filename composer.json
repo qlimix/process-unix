@@ -18,7 +18,11 @@
         "ext-pcntl": "*",
         "ext-posix": "*"
     },
+    "require-dev": {
+        "qlimix/dependency-container": "dev-master"
+    },
     "suggest": {
+        "qlimix/dependency-container": "Provides default unix process control provider"
     },
     "config": {
         "sort-packages": true
@@ -27,6 +31,10 @@
         {
             "type": "vcs",
             "url": "git@bitbucket.org:qlimix/process.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:qlimix/dependency-container.git"
         }
     ],
     "minimum-stability": "dev",
