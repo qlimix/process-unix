@@ -8,7 +8,7 @@ final class PcntlRuntimeControl implements RuntimeControlInterface
     private $quit = false;
 
     /**
-     * @param array $signals
+     * @param int[] $signals
      */
     public function __construct(array $signals)
     {

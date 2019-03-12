@@ -5,6 +5,7 @@ namespace Qlimix\Process;
 use Qlimix\Process\Exception\ProcessException;
 use Qlimix\Process\Output\OutputInterface;
 use Qlimix\Process\Runtime\RuntimeControlInterface;
+use Throwable;
 
 final class UnixProcessControl implements ProcessControlInterface
 {
@@ -20,10 +21,6 @@ final class UnixProcessControl implements ProcessControlInterface
     /** @var int */
     private $nextPid = 0;
 
-    /**
-     * @param RuntimeControlInterface $control
-     * @param OutputInterface $output
-     */
     public function __construct(RuntimeControlInterface $control, OutputInterface $output)
     {
         $this->control = $control;
@@ -117,7 +114,7 @@ final class UnixProcessControl implements ProcessControlInterface
 
         try {
             $process->run($this->control, $this->output);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             exit(1);
         }
 

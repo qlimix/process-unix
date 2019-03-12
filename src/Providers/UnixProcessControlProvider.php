@@ -29,7 +29,7 @@ final class UnixProcessControlProvider implements DependencyProviderInterface
             );
         });
 
-        $registry->set(RuntimeControlInterface::class, static function (ContainerInterface $container) {
+        $registry->set(RuntimeControlInterface::class, static function () {
             return new PcntlRuntimeControl([
                 SIGTERM,
                 SIGINT,
