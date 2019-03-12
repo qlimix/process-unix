@@ -3,24 +3,24 @@
 namespace Qlimix\Process\Providers;
 
 use Psr\Container\ContainerInterface;
-use Qlimix\DependencyContainer\DependencyProviderInterface;
-use Qlimix\DependencyContainer\DependencyRegistryInterface;
+use Qlimix\DependencyContainer\ProviderInterface;
+use Qlimix\DependencyContainer\RegistryInterface;
 use Qlimix\Process\Output\OutputInterface;
 use Qlimix\Process\ProcessControlInterface;
 use Qlimix\Process\Runtime\PcntlRuntimeControl;
 use Qlimix\Process\Runtime\RuntimeControlInterface;
 use Qlimix\Process\UnixProcessControl;
-use const SIGTERM;
-use const SIGINT;
-use const SIGHUP;
 use const SIGABRT;
+use const SIGHUP;
+use const SIGINT;
+use const SIGTERM;
 
-final class UnixProcessControlProvider implements DependencyProviderInterface
+final class UnixProcessControlProvider implements ProviderInterface
 {
     /**
      * @inheritDoc
      */
-    public function provide(DependencyRegistryInterface $registry): void
+    public function provide(RegistryInterface $registry): void
     {
         $registry->set(ProcessControlInterface::class, static function (ContainerInterface $container) {
             return new UnixProcessControl(
@@ -34,7 +34,7 @@ final class UnixProcessControlProvider implements DependencyProviderInterface
                 SIGTERM,
                 SIGINT,
                 SIGHUP,
-                SIGABRT
+                SIGABRT,
             ]);
         });
     }

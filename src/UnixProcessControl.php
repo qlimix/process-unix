@@ -6,6 +6,14 @@ use Qlimix\Process\Exception\ProcessException;
 use Qlimix\Process\Output\OutputInterface;
 use Qlimix\Process\Runtime\RuntimeControlInterface;
 use Throwable;
+use const SIGKILL;
+use const WNOHANG;
+use function pcntl_fork;
+use function pcntl_wait;
+use function pcntl_waitpid;
+use function pcntl_wexitstatus;
+use function pcntl_wifexited;
+use function posix_kill;
 
 final class UnixProcessControl implements ProcessControlInterface
 {

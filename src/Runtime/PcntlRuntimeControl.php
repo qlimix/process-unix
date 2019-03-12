@@ -2,6 +2,9 @@
 
 namespace Qlimix\Process\Runtime;
 
+use function pcntl_signal;
+use function pcntl_signal_dispatch;
+
 final class PcntlRuntimeControl implements RuntimeControlInterface
 {
     /** @var bool */
@@ -38,7 +41,7 @@ final class PcntlRuntimeControl implements RuntimeControlInterface
         pcntl_signal($signal, [$this, 'signal']);
     }
 
-    public function signal($signal): void
+    public function signal(): void
     {
         $this->quit = true;
     }

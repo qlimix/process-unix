@@ -19,6 +19,7 @@
         "ext-posix": "*"
     },
     "require-dev": {
+        "qlimix/code-standard": "dev-master",
         "qlimix/dependency-container": "dev-master"
     },
     "suggest": {
@@ -28,6 +29,14 @@
         "sort-packages": true
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:qlimix/codesniffer-standard.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:qlimix/code-standard.git"
+        },
         {
             "type": "vcs",
             "url": "git@bitbucket.org:qlimix/process.git"
