@@ -4,15 +4,13 @@ namespace Qlimix\Process;
 
 use Qlimix\Process\Exception\ProcessException;
 use Qlimix\Process\Output\OutputInterface;
+use Qlimix\Process\Result\ExitedProcess;
 use Qlimix\Process\Runtime\RuntimeControlInterface;
 use Throwable;
-use const SIGKILL;
+use const SIGTERM;
 use const WNOHANG;
 use function pcntl_fork;
 use function pcntl_wait;
-use function pcntl_waitpid;
-use function pcntl_wexitstatus;
-use function pcntl_wifexited;
 use function posix_kill;
 
 final class UnixProcessControl implements ProcessControlInterface
@@ -38,7 +36,7 @@ final class UnixProcessControl implements ProcessControlInterface
     /**
      * @inheritDoc
      */
-    public function status(): ?int
+    public function status(): ?ExitedProcess
     {
         $status = -1;
         $this->output->write('Reaping');
@@ -53,18 +51,15 @@ final class UnixProcessControl implements ProcessControlInterface
             throw new ProcessException('Failed waiting for a returning process');
         }
 
-        if (pcntl_wifexited($status)) {
-            $this->output->write('Found returned process');
-            foreach ($this->processes as $index => $process) {
-                if ($process === $pid) {
-                    unset($this->processes[$index]);
-                    return $index;
-                }
+        $this->output->write('Found returned process');
+        foreach ($this->processes as $index => $process) {
+            if ($process === $pid) {
+                unset($this->processes[$index]);
+                return new ExitedProcess($index, $status === 0);
             }
-            throw new ProcessException('Couldn\'t find pid in process list');
         }
 
-        throw new ProcessException('Process returned with '.pcntl_wexitstatus($status));
+        throw new ProcessException('Couldn\'t find pid in process list');
     }
 
     /**
@@ -76,31 +71,7 @@ final class UnixProcessControl implements ProcessControlInterface
             return false;
         }
 
-        $status = -1;
-        $this->output->write('Reaping');
-        $pid = pcntl_waitpid($pid, $status, WNOHANG);
-
-        if ($pid === 0) {
-            $this->output->write('No child returned');
-            return true;
-        }
-
-        if ($pid === -1) {
-            throw new ProcessException('Failed waiting for a returning process');
-        }
-
-        if (pcntl_wifexited($status)) {
-            $this->output->write('Found returned process');
-            foreach ($this->processes as $index => $process) {
-                if ($process === $pid) {
-                    unset($this->processes[$index]);
-                    return false;
-                }
-            }
-            throw new ProcessException('Couldn\'t find pid in process list');
-        }
-
-        throw new ProcessException('Process returned with '.pcntl_wexitstatus($status));
+        return posix_kill($pid, 0);
     }
 
     /**
@@ -151,7 +122,7 @@ final class UnixProcessControl implements ProcessControlInterface
             return;
         }
 
-        posix_kill($pid, SIGKILL);
+        posix_kill($pid, SIGTERM);
     }
 
     /**
@@ -161,7 +132,7 @@ final class UnixProcessControl implements ProcessControlInterface
     {
         $this->output->write('Stop processes');
         foreach ($this->processes as $process) {
-            posix_kill($process, SIGKILL);
+            posix_kill($process, SIGTERM);
         }
     }
 }
