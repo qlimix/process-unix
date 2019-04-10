@@ -6,17 +6,16 @@ use Qlimix\Process\Exception\ProcessException;
 use Qlimix\Process\Output\OutputInterface;
 use Qlimix\Process\Result\ExitedProcess;
 use Qlimix\Process\Runtime\RuntimeControlInterface;
+use Qlimix\Process\System\SystemInterface;
 use Throwable;
-use const SIGTERM;
-use const WNOHANG;
-use function pcntl_fork;
-use function pcntl_wait;
-use function posix_kill;
 
 final class UnixProcessControl implements ProcessControlInterface
 {
     /** @var RuntimeControlInterface */
     private $control;
+
+    /** @var SystemInterface */
+    private $system;
 
     /** @var OutputInterface */
     private $output;
@@ -38,24 +37,23 @@ final class UnixProcessControl implements ProcessControlInterface
      */
     public function status(): ?ExitedProcess
     {
-        $status = -1;
         $this->output->write('Reaping');
-        $pid = pcntl_wait($status, WNOHANG);
+        try {
+            $awaitedProcess = $this->system->wait();
+        } catch (Throwable $exception) {
+            throw new ProcessException('Failed waiting for a returning process', 0, $exception);
+        }
 
-        if ($pid === 0) {
+        if ($awaitedProcess === null) {
             $this->output->write('No child returned');
             return null;
         }
 
-        if ($pid === -1) {
-            throw new ProcessException('Failed waiting for a returning process');
-        }
-
         $this->output->write('Found returned process');
         foreach ($this->processes as $index => $process) {
-            if ($process === $pid) {
+            if ($process === $awaitedProcess->getPid()) {
                 unset($this->processes[$index]);
-                return new ExitedProcess($index, $status === 0);
+                return new ExitedProcess($index, $awaitedProcess->getStatus() === 0);
             }
         }
 
@@ -71,7 +69,11 @@ final class UnixProcessControl implements ProcessControlInterface
             return false;
         }
 
-        return posix_kill($pid, 0);
+        try {
+            return $this->system->alive($pid);
+        } catch (Throwable $exception) {
+            throw new ProcessException('Failed to check if process is still running', 0, $exception);
+        }
     }
 
     /**
@@ -80,15 +82,17 @@ final class UnixProcessControl implements ProcessControlInterface
     public function startProcess(ProcessInterface $process): int
     {
         $this->output->write('Forking');
-        $pid = pcntl_fork();
-        if ($pid === -1) {
-            throw new ProcessException('Could not start new process');
+
+        try {
+            $pid = $this->system->spawn();
+        } catch (Throwable $exception) {
+            throw new ProcessException('Could not start new process', 0, $exception);
         }
 
         if ($pid > 0) {
-            $internalPid = $this->nextPid++;
-            $this->processes[$internalPid] = $pid;
-            return $internalPid;
+            $this->nextPid++;
+            $this->processes[$this->nextPid] = $pid;
+            return $this->nextPid;
         }
 
         try {
@@ -122,7 +126,11 @@ final class UnixProcessControl implements ProcessControlInterface
             return;
         }
 
-        posix_kill($pid, SIGTERM);
+        try {
+            $this->system->kill($pid);
+        } catch (Throwable $exception) {
+            throw new ProcessException('Failed to stop process', 0, $exception);
+        }
     }
 
     /**
@@ -132,7 +140,11 @@ final class UnixProcessControl implements ProcessControlInterface
     {
         $this->output->write('Stop processes');
         foreach ($this->processes as $process) {
-            posix_kill($process, SIGTERM);
+            try {
+                $this->system->kill($process);
+            } catch (Throwable $exception) {
+                $this->output->write('Failed to stop process');
+            }
         }
     }
 }

@@ -7,8 +7,8 @@ use Qlimix\DependencyContainer\ProviderInterface;
 use Qlimix\DependencyContainer\RegistryInterface;
 use Qlimix\Process\Output\OutputInterface;
 use Qlimix\Process\ProcessControlInterface;
-use Qlimix\Process\Runtime\PcntlRuntimeControl;
 use Qlimix\Process\Runtime\RuntimeControlInterface;
+use Qlimix\Process\Runtime\UnixRuntimeControl;
 use Qlimix\Process\UnixProcessControl;
 use const SIGABRT;
 use const SIGHUP;
@@ -30,7 +30,7 @@ final class UnixProcessControlProvider implements ProviderInterface
         });
 
         $registry->set(RuntimeControlInterface::class, static function () {
-            return new PcntlRuntimeControl([
+            return new UnixRuntimeControl([
                 SIGTERM,
                 SIGINT,
                 SIGHUP,
