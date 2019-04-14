@@ -14,6 +14,11 @@ interface SystemInterface
     /**
      * @throws SystemException
      */
+    public function terminate(int $pid): void;
+
+    /**
+     * @throws SystemException
+     */
     public function alive(int $pid): bool;
 
     /**

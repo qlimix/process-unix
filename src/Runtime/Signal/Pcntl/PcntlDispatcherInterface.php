@@ -2,11 +2,11 @@
 
 namespace Qlimix\Process\Runtime\Signal\Pcntl;
 
-use Qlimix\Process\Runtime\Signal\Dispatcher;
+use Qlimix\Process\Runtime\Signal\DispatcherInterface;
 use Qlimix\Process\Runtime\Signal\Exception\SignalException;
 use function pcntl_signal_dispatch;
 
-final class PcntlDispatcher implements Dispatcher
+final class PcntlDispatcherInterface implements DispatcherInterface
 {
     /**
      * @inheritDoc

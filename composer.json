@@ -18,6 +18,11 @@
         "ext-pcntl": "*",
         "ext-posix": "*"
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Qlimix\\Tests\\Process\\": "tests/"
+        }
+    },
     "require-dev": {
         "qlimix/code-standard": "dev-master",
         "qlimix/dependency-container": "dev-master"

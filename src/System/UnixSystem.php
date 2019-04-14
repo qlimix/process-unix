@@ -1,25 +1,34 @@
 <?php declare(strict_types=1);
 
-namespace Qlimix\Process\System\Posix;
+namespace Qlimix\Process\System;
 
-use Qlimix\Process\System\AwaitedProcess;
 use Qlimix\Process\System\Exception\SystemException;
-use Qlimix\Process\System\SystemInterface;
 use function pcntl_fork;
 use function pcntl_wait;
 use function posix_kill;
+use const SIGKILL;
 use const SIGTERM;
 use const WNOHANG;
 
-final class PosixSystem implements SystemInterface
+final class UnixSystem implements SystemInterface
 {
     /**
      * @inheritDoc
      */
     public function kill(int $pid): void
     {
-        if (posix_kill($pid, SIGTERM)) {
+        if (posix_kill($pid, SIGKILL)) {
             throw new SystemException('Failed to kill process');
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function terminate(int $pid): void
+    {
+        if (posix_kill($pid, SIGTERM)) {
+            throw new SystemException('Failed to terminate process');
         }
     }
 

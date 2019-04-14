@@ -3,12 +3,12 @@
 namespace Qlimix\Process\Runtime;
 
 use Qlimix\Process\Output\OutputInterface;
-use Qlimix\Process\Runtime\Signal\Dispatcher;
+use Qlimix\Process\Runtime\Signal\DispatcherInterface;
 use Throwable;
 
 final class UnixRuntimeControl implements RuntimeControlInterface
 {
-    /** @var Dispatcher */
+    /** @var DispatcherInterface */
     private $dispatcher;
 
     /** @var OutputInterface */
@@ -17,7 +17,7 @@ final class UnixRuntimeControl implements RuntimeControlInterface
     /** @var bool */
     private $quit = false;
 
-    public function __construct(Dispatcher $dispatcher, OutputInterface $output)
+    public function __construct(DispatcherInterface $dispatcher, OutputInterface $output)
     {
         $this->dispatcher = $dispatcher;
         $this->output = $output;

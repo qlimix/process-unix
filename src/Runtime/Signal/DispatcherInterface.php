@@ -4,7 +4,7 @@ namespace Qlimix\Process\Runtime\Signal;
 
 use Qlimix\Process\Runtime\Signal\Exception\SignalException;
 
-interface Dispatcher
+interface DispatcherInterface
 {
     /**
      * @throws SignalException

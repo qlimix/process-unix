@@ -4,9 +4,11 @@ namespace Qlimix\Process;
 
 use Qlimix\Process\Exception\ProcessException;
 use Qlimix\Process\Output\OutputInterface;
+use Qlimix\Process\Registry\RegistryInterface;
 use Qlimix\Process\Result\ExitedProcess;
 use Qlimix\Process\Runtime\RuntimeControlInterface;
 use Qlimix\Process\System\SystemInterface;
+use Qlimix\Process\Terminate\TerminationInterface;
 use Throwable;
 
 final class UnixProcessControl implements ProcessControlInterface
@@ -20,16 +22,24 @@ final class UnixProcessControl implements ProcessControlInterface
     /** @var OutputInterface */
     private $output;
 
-    /** @var int[] */
-    private $processes = [];
+    /** @var RegistryInterface */
+    private $registry;
 
-    /** @var int */
-    private $nextPid = 0;
+    /** @var TerminationInterface */
+    private $termination;
 
-    public function __construct(RuntimeControlInterface $control, OutputInterface $output)
-    {
+    public function __construct(
+        RuntimeControlInterface $control,
+        SystemInterface $system,
+        OutputInterface $output,
+        RegistryInterface $registry,
+        TerminationInterface $termination
+    ) {
         $this->control = $control;
+        $this->system = $system;
         $this->output = $output;
+        $this->registry = $registry;
+        $this->termination = $termination;
     }
 
     /**
@@ -50,14 +60,14 @@ final class UnixProcessControl implements ProcessControlInterface
         }
 
         $this->output->write('Found returned process');
-        foreach ($this->processes as $index => $process) {
-            if ($process === $awaitedProcess->getPid()) {
-                unset($this->processes[$index]);
-                return new ExitedProcess($index, $awaitedProcess->getStatus() === 0);
-            }
+        try {
+            return new ExitedProcess(
+                $this->registry->remove($awaitedProcess->getPid()),
+                $awaitedProcess->getStatus() === 0
+            );
+        } catch (Throwable $exception) {
+            throw new ProcessException('Couldn\'t find pid in process list');
         }
-
-        throw new ProcessException('Couldn\'t find pid in process list');
     }
 
     /**
@@ -65,7 +75,7 @@ final class UnixProcessControl implements ProcessControlInterface
      */
     public function isProcessRunning(int $pid): bool
     {
-        if (!isset($this->processes[$pid])) {
+        if (!$this->registry->has($pid)) {
             return false;
         }
 
@@ -90,18 +100,18 @@ final class UnixProcessControl implements ProcessControlInterface
         }
 
         if ($pid > 0) {
-            $this->nextPid++;
-            $this->processes[$this->nextPid] = $pid;
-            return $this->nextPid;
+            return $this->registry->add($pid, $process);
         }
 
         try {
             $process->run($this->control, $this->output);
         } catch (Throwable $exception) {
-            exit(1);
+            $this->termination->fail();
         }
 
-        exit(0);
+        $this->termination->success();
+
+        return 0;
     }
 
     /**
@@ -122,12 +132,12 @@ final class UnixProcessControl implements ProcessControlInterface
      */
     public function stopProcess(int $pid): void
     {
-        if (!isset($this->processes[$pid])) {
+        if (!$this->registry->has($pid)) {
             return;
         }
 
         try {
-            $this->system->kill($pid);
+            $this->system->terminate($pid);
         } catch (Throwable $exception) {
             throw new ProcessException('Failed to stop process', 0, $exception);
         }
@@ -139,9 +149,9 @@ final class UnixProcessControl implements ProcessControlInterface
     public function stopProcesses(): void
     {
         $this->output->write('Stop processes');
-        foreach ($this->processes as $process) {
+        foreach ($this->registry->getAll() as $process) {
             try {
-                $this->system->kill($process);
+                $this->system->terminate($process->getProcessId());
             } catch (Throwable $exception) {
                 $this->output->write('Failed to stop process');
             }
