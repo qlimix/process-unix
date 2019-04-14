@@ -66,7 +66,11 @@ final class UnixProcessControlTest extends TestCase
 
         $this->registry->expects($this->once())
             ->method('remove')
-            ->willReturn(1);
+            ->willReturn(new RegisteredProcess(
+                1,
+                5,
+                $this->createMock(ProcessInterface::class)
+            ));
 
         $status = $this->processControl->status();
 
