@@ -64,18 +64,16 @@ final class UnixProcessControlTest extends TestCase
             ->method('wait')
             ->willReturn(new AwaitedProcess(5, 0));
 
+        $process = $this->createMock(ProcessInterface::class);
+
         $this->registry->expects($this->once())
             ->method('remove')
-            ->willReturn(new RegisteredProcess(
-                1,
-                5,
-                $this->createMock(ProcessInterface::class)
-            ));
+            ->willReturn($process);
 
-        $status = $this->processControl->status();
+        $exit = $this->processControl->status();
 
-        $this->assertSame($status->getPid(), 1);
-        $this->assertTrue($status->success());
+        $this->assertSame($exit->getProcess(), $process);
+        $this->assertTrue($exit->isSuccess());
     }
 
     /**

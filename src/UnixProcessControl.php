@@ -62,7 +62,7 @@ final class UnixProcessControl implements ProcessControlInterface
         $this->output->write('Found returned process');
         try {
             return new ExitedProcess(
-                $this->registry->remove($awaitedProcess->getPid())->getRegistryId(),
+                $this->registry->remove($awaitedProcess->getPid()),
                 $awaitedProcess->getStatus() === 0
             );
         } catch (Throwable $exception) {
