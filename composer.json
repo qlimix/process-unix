@@ -24,11 +24,7 @@
         }
     },
     "require-dev": {
-        "qlimix/code-standard": "dev-master",
-        "qlimix/dependency-container": "dev-master"
-    },
-    "suggest": {
-        "qlimix/dependency-container": "Provides default unix process control provider"
+        "qlimix/code-standard": "dev-master"
     },
     "config": {
         "sort-packages": true
@@ -45,10 +41,6 @@
         {
             "type": "vcs",
             "url": "git@bitbucket.org:qlimix/process.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:qlimix/dependency-container.git"
         }
     ],
     "minimum-stability": "dev",
