@@ -3,6 +3,7 @@
 namespace Qlimix\Process\Runtime\Signal\Pcntl;
 
 use Qlimix\Process\Runtime\Signal\Exception\DispatcherException;
+use Qlimix\Process\Runtime\Signal\Exception\SignalException;
 use Qlimix\Process\Runtime\Signal\HandlerInterface;
 use Qlimix\Process\Runtime\Signal\HandlerRegistryInterface;
 use function count;
@@ -30,11 +31,11 @@ final class PcntlHandlerRegistry implements HandlerRegistryInterface
     }
 
     /**
-     * @
-     *
      * @param mixed $signinfo
      *
-     * @throws DispatcherException
+     * @throws SignalException
+     *
+     * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
      */
     public function handle(int $signo, $signinfo): void
     {
@@ -43,7 +44,7 @@ final class PcntlHandlerRegistry implements HandlerRegistryInterface
         }
 
         foreach ($this->handlers[$signo] as $handler) {
-            $handler->handle($signo);
+            $handler->handle();
         }
     }
 }

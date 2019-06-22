@@ -2,12 +2,12 @@
 
 namespace Qlimix\Process\Runtime\Signal;
 
-use Qlimix\Process\Runtime\Signal\Exception\DispatcherException;
+use Qlimix\Process\Runtime\Signal\Exception\SignalException;
 
 interface HandlerInterface
 {
     /**
-     * @throws DispatcherException
+     * @throws SignalException
      */
-    public function handle(int $signo): void;
+    public function handle(): void;
 }

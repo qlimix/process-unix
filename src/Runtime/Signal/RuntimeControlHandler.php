@@ -17,7 +17,7 @@ final class RuntimeControlHandler implements HandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(int $signo): void
+    public function handle(): void
     {
         $this->runtimeControl->quit();
     }
