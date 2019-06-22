@@ -170,6 +170,26 @@ final class UnixProcessControlTest extends TestCase
     /**
      * @test
      */
+    public function shouldThrowOnFailingSystemAlive(): void
+    {
+        $this->registry->expects($this->once())
+            ->method('has')
+            ->willReturn(true);
+
+        $pid = $this->processControl->startProcess($this->createMock(ProcessInterface::class));
+
+        $this->system->expects($this->once())
+            ->method('alive')
+            ->willThrowException(new SystemException());
+
+        $this->expectException(ProcessException::class);
+
+        $this->processControl->isProcessRunning($pid);
+    }
+
+    /**
+     * @test
+     */
     public function shouldStartProcess(): void
     {
         $this->system->expects($this->once())
@@ -268,6 +288,54 @@ final class UnixProcessControlTest extends TestCase
     public function shouldStopProcess(): void
     {
         $this->registry->expects($this->once())
+            ->method('has')
+            ->willReturn(true);
+
+        $this->system->expects($this->once())
+            ->method('terminate');
+
+        $this->processControl->stopProcess(1);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnOnUnknownPid(): void
+    {
+        $this->registry->expects($this->once())
+            ->method('has')
+            ->willReturn(false);
+
+        $this->system->expects($this->never())
+            ->method('terminate');
+
+        $this->processControl->stopProcess(1);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldThrowOnFailedTerminate(): void
+    {
+        $this->registry->expects($this->once())
+            ->method('has')
+            ->willReturn(true);
+
+        $this->system->expects($this->once())
+            ->method('terminate')
+            ->willThrowException(new SystemException());
+
+        $this->expectException(ProcessException::class);
+
+        $this->processControl->stopProcess(1);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldStopProcesses(): void
+    {
+        $this->registry->expects($this->once())
             ->method('getAll')
             ->willReturn([
                 new RegisteredProcess(1, 11, $this->createMock(ProcessInterface::class)),
@@ -284,7 +352,7 @@ final class UnixProcessControlTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotThrowOnExceptionStopProcess(): void
+    public function shouldNotThrowOnExceptionStopProcesses(): void
     {
         $this->registry->expects($this->once())
             ->method('getAll')

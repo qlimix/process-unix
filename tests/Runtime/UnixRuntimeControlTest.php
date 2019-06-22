@@ -6,6 +6,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Qlimix\Process\Output\OutputInterface;
 use Qlimix\Process\Runtime\Signal\DispatcherInterface;
+use Qlimix\Process\Runtime\Signal\Exception\DispatcherException;
 use Qlimix\Process\Runtime\UnixRuntimeControl;
 
 final class UnixRuntimeControlTest extends TestCase
@@ -37,6 +38,21 @@ final class UnixRuntimeControlTest extends TestCase
     {
         $this->dispatcher->expects($this->once())
             ->method('dispatch');
+
+        $this->runtimeControl->tick();
+    }
+
+    /**
+     * @test
+     */
+    public function shouldLogOnFailedDispatchTick(): void
+    {
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->willThrowException(new DispatcherException());
+
+        $this->output->expects($this->exactly(2))
+            ->method('write');
 
         $this->runtimeControl->tick();
     }

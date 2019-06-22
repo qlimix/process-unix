@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Qlimix\Process\Runtime\Signal\Pcntl;
+namespace Qlimix\Process\Runtime\Signal;
 
 use Qlimix\Process\Runtime\RuntimeControlInterface;
-use Qlimix\Process\Runtime\Signal\HandlerInterface;
 
-final class QuitHandlerInterface implements HandlerInterface
+final class RuntimeControlHandler implements HandlerInterface
 {
     /** @var RuntimeControlInterface */
     private $runtimeControl;
@@ -18,7 +17,7 @@ final class QuitHandlerInterface implements HandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(int $signo, $signinfo): void
+    public function handle(int $signo): void
     {
         $this->runtimeControl->quit();
     }

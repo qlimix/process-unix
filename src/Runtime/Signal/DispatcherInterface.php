@@ -2,12 +2,12 @@
 
 namespace Qlimix\Process\Runtime\Signal;
 
-use Qlimix\Process\Runtime\Signal\Exception\SignalException;
+use Qlimix\Process\Runtime\Signal\Exception\DispatcherException;
 
 interface DispatcherInterface
 {
     /**
-     * @throws SignalException
+     * @throws DispatcherException
      */
     public function dispatch(): void;
 }

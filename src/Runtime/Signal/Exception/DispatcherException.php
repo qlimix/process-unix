@@ -4,6 +4,6 @@ namespace Qlimix\Process\Runtime\Signal\Exception;
 
 use Exception;
 
-final class SignalException extends Exception
+final class DispatcherException extends Exception
 {
 }

@@ -1,48 +1,39 @@
 {
     "name": "qlimix/process-unix",
-    "type": "package",
-    "license": "LGPL-3.0-only",
+    "type": "library",
+    "description": "Running sync long running processes",
+    "license": "MIT",
+    "keywords": [
+        "process",
+        "sync",
+        "long",
+        "running"
+    ],
     "authors": [
         {
             "name": "frank",
             "email": "frank@qlimix.net"
         }
     ],
+    "require": {
+        "qlimix/process": "^1.0",
+        "ext-pcntl": "*",
+        "ext-posix": "*"
+    },
     "autoload": {
         "psr-4": {
             "Qlimix\\Process\\": "src/"
         }
-    },
-    "require": {
-        "qlimix/process": "dev-master",
-        "ext-pcntl": "*",
-        "ext-posix": "*"
     },
     "autoload-dev": {
         "psr-4": {
             "Qlimix\\Tests\\Process\\": "tests/"
         }
     },
-    "require-dev": {
-        "qlimix/code-standard": "dev-master"
-    },
     "config": {
         "sort-packages": true
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:qlimix/codesniffer-standard.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:qlimix/code-standard.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:qlimix/process.git"
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "require-dev": {
+        "qlimix/code-standard": "^1.0"
+    }
 }
