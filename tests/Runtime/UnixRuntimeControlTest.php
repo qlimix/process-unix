@@ -5,36 +5,28 @@ namespace Qlimix\Tests\Process\Runtime;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Qlimix\Process\Output\OutputInterface;
+use Qlimix\Process\Runtime\Reason;
 use Qlimix\Process\Runtime\Signal\DispatcherInterface;
 use Qlimix\Process\Runtime\Signal\Exception\DispatcherException;
 use Qlimix\Process\Runtime\UnixRuntimeControl;
 
 final class UnixRuntimeControlTest extends TestCase
 {
-    /** @var MockObject */
-    private $dispatcher;
+    private MockObject $dispatcher;
 
-    /** @var MockObject */
-    private $output;
+    private MockObject $output;
 
-    /** @var UnixRuntimeControl */
-    private $runtimeControl;
+    private UnixRuntimeControl $runtimeControl;
 
     public function setUp(): void
     {
         $this->dispatcher = $this->createMock(DispatcherInterface::class);
         $this->output = $this->createMock(OutputInterface::class);
 
-        $this->runtimeControl = new UnixRuntimeControl(
-            $this->dispatcher,
-            $this->output
-        );
+        $this->runtimeControl = new UnixRuntimeControl($this->dispatcher, $this->output);
     }
 
-    /**
-     * @test
-     */
-    public function shouldTick(): void
+    public function testShouldTick(): void
     {
         $this->dispatcher->expects($this->once())
             ->method('dispatch');
@@ -42,44 +34,29 @@ final class UnixRuntimeControlTest extends TestCase
         $this->runtimeControl->tick();
     }
 
-    /**
-     * @test
-     */
-    public function shouldLogOnFailedDispatchTick(): void
+    public function testShouldLogOnFailedDispatchTick(): void
     {
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
             ->willThrowException(new DispatcherException());
 
-        $this->output->expects($this->exactly(2))
-            ->method('write');
-
         $this->runtimeControl->tick();
     }
 
-    /**
-     * @test
-     */
-    public function shouldAbort(): void
+    public function testShouldAbort(): void
     {
-        $this->runtimeControl->quit();
+        $this->runtimeControl->quit(new Reason('test'));
         $this->assertTrue($this->runtimeControl->abort());
     }
 
-    /**
-     * @test
-     */
-    public function shouldNotAbort(): void
+    public function testShouldNotAbort(): void
     {
         $this->assertFalse($this->runtimeControl->abort());
     }
 
-    /**
-     * @test
-     */
-    public function shouldQuitAndAbort(): void
+    public function testShouldQuitAndAbort(): void
     {
-        $this->runtimeControl->quit();
+        $this->runtimeControl->quit(new Reason('test'));
         $this->assertTrue($this->runtimeControl->abort());
     }
 }

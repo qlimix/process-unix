@@ -9,6 +9,11 @@ interface SystemInterface
     /**
      * @throws SystemException
      */
+    public function status(): ?Status;
+
+    /**
+     * @throws SystemException
+     */
     public function kill(int $pid): void;
 
     /**
@@ -24,10 +29,5 @@ interface SystemInterface
     /**
      * @throws SystemException
      */
-    public function spawn(): int;
-
-    /**
-     * @throws SystemException
-     */
-    public function wait(): ?AwaitedProcess;
+    public function spawn(string $process): int;
 }

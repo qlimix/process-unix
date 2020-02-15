@@ -12,7 +12,7 @@ use function pcntl_signal;
 final class PcntlHandlerRegistry implements HandlerRegistryInterface
 {
     /** @var HandlerInterface[][] */
-    private $handlers = [];
+    private array $handlers = [];
 
     /**
      * @inheritDoc

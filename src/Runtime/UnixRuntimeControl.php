@@ -8,14 +8,11 @@ use Throwable;
 
 final class UnixRuntimeControl implements RuntimeControlInterface
 {
-    /** @var DispatcherInterface */
-    private $dispatcher;
+    private DispatcherInterface $dispatcher;
 
-    /** @var OutputInterface */
-    private $output;
+    private OutputInterface $output;
 
-    /** @var bool */
-    private $quit = false;
+    private bool $quit = false;
 
     public function __construct(DispatcherInterface $dispatcher, OutputInterface $output)
     {
@@ -31,9 +28,9 @@ final class UnixRuntimeControl implements RuntimeControlInterface
         try {
             $this->dispatcher->dispatch();
         } catch (Throwable $exception) {
-            $this->output->write('Failed to dispatch');
-            $this->output->write((string) $exception);
-            $this->quit();
+            if (!$this->quit) {
+                $this->quit(Reason::fromException($exception));
+            }
         }
     }
 
@@ -45,8 +42,10 @@ final class UnixRuntimeControl implements RuntimeControlInterface
         return $this->quit;
     }
 
-    public function quit(): void
+    public function quit(Reason $reason): void
     {
         $this->quit = true;
+        $this->output->writeLine('Quiting, reason:');
+        $this->output->writeLine($reason->getMessage());
     }
 }
