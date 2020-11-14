@@ -26,6 +26,10 @@ final class ProcSystem implements SystemInterface
     {
         foreach ($this->procs as $index => $proc) {
             $status = proc_get_status($proc);
+            if ($status === false) {
+                throw new SystemException('Couldn\'t get proc status');
+            }
+
             if (!$status['running']) {
                 proc_close($proc);
                 unset($this->procs[$index]);
@@ -90,6 +94,9 @@ final class ProcSystem implements SystemInterface
         }
 
         $status = proc_get_status($proc);
+        if ($status === false) {
+            throw new SystemException('Couldn\'t get proc status');
+        }
 
         $processId = $status['pid'];
         $this->procs[$processId] = $proc;
