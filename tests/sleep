@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+pcntl_async_signals(true);
+$run = true;
+$handler = static function (int $signo, $signinfo) use (&$run): void {
+    $run = false;
+    echo 'Signal: '.$signo.PHP_EOL;
+};
+pcntl_signal(SIGTERM, $handler);
+pcntl_signal(SIGINT, $handler);
+
+$exitCode = 0;
+if ($argc === 2) {
+    $exitCode = (int) $argv[1];
+}
+
+while ($run) {
+    usleep(100000);
+    pcntl_signal_dispatch();
+}
+
+exit($exitCode);

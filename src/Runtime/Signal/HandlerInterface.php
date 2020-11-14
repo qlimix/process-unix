@@ -9,5 +9,5 @@ interface HandlerInterface
     /**
      * @throws SignalException
      */
-    public function handle(): void;
+    public function handle(int $signal): void;
 }

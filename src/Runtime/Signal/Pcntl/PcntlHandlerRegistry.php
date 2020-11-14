@@ -12,7 +12,7 @@ use function pcntl_signal;
 final class PcntlHandlerRegistry implements HandlerRegistryInterface
 {
     /** @var HandlerInterface[][] */
-    private $handlers = [];
+    private array $handlers = [];
 
     /**
      * @inheritDoc
@@ -44,7 +44,7 @@ final class PcntlHandlerRegistry implements HandlerRegistryInterface
         }
 
         foreach ($this->handlers[$signo] as $handler) {
-            $handler->handle();
+            $handler->handle($signo);
         }
     }
 }

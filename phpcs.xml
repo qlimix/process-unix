@@ -10,4 +10,8 @@
 
 <!-- Include full Qlimix Coding Standard -->
 <rule ref="Qlimix"/>
+
+<rule ref="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter">
+    <exclude-pattern>src/Runtime/Signal/Pcntl/PcntlHandlerRegistry.php</exclude-pattern>
+</rule>
 </ruleset>

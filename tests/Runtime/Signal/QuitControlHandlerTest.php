@@ -5,26 +5,21 @@ namespace Qlimix\Tests\Process\Runtime\Signal;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Qlimix\Process\Runtime\RuntimeControlInterface;
-use Qlimix\Process\Runtime\Signal\RuntimeControlHandler;
+use Qlimix\Process\Runtime\Signal\QuitControlHandler;
 
-final class RuntimeControlHandlerTest extends TestCase
+final class QuitControlHandlerTest extends TestCase
 {
-    /** @var MockObject */
-    private $runtimeControl;
+    private MockObject $runtimeControl;
 
-    /** @var RuntimeControlHandler */
-    private $runtimeHandler;
+    private QuitControlHandler $runtimeHandler;
 
     protected function setUp(): void
     {
         $this->runtimeControl = $this->createMock(RuntimeControlInterface::class);
-        $this->runtimeHandler = new RuntimeControlHandler($this->runtimeControl);
+        $this->runtimeHandler = new QuitControlHandler($this->runtimeControl);
     }
 
-    /**
-     * @test
-     */
-    public function shouldHandle(): void
+    public function testShouldHandle(): void
     {
         $this->runtimeControl->expects($this->once())
             ->method('quit');

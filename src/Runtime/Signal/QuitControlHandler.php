@@ -2,12 +2,12 @@
 
 namespace Qlimix\Process\Runtime\Signal;
 
+use Qlimix\Process\Runtime\Reason;
 use Qlimix\Process\Runtime\RuntimeControlInterface;
 
-final class RuntimeControlHandler implements HandlerInterface
+final class QuitControlHandler implements HandlerInterface
 {
-    /** @var RuntimeControlInterface */
-    private $runtimeControl;
+    private RuntimeControlInterface $runtimeControl;
 
     public function __construct(RuntimeControlInterface $runtimeControl)
     {
@@ -17,8 +17,8 @@ final class RuntimeControlHandler implements HandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(): void
+    public function handle(int $signal): void
     {
-        $this->runtimeControl->quit();
+        $this->runtimeControl->quit(new Reason('signal '.$signal));
     }
 }
