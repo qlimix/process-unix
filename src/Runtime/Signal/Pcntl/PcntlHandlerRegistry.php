@@ -44,7 +44,7 @@ final class PcntlHandlerRegistry implements HandlerRegistryInterface
         }
 
         foreach ($this->handlers[$signo] as $handler) {
-            $handler->handle();
+            $handler->handle($signo);
         }
     }
 }
