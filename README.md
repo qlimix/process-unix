@@ -5,7 +5,7 @@
 [![Packagist](https://img.shields.io/packagist/v/qlimix/process-unix.svg)](https://packagist.org/packages/qlimix/process-unix)
 [![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/qlimix/process-unix/blob/master/LICENSE)
 
-Running sync long running processes.
+Unix implementation of the process control interfaces.
 
 ## Install
 
