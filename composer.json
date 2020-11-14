@@ -16,10 +16,10 @@
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": ">7.4",
         "ext-pcntl": "*",
         "ext-posix": "*",
-        "qlimix/process": "v2.x-dev"
+        "qlimix/process": "^2.0"
     },
     "require-dev": {
         "qlimix/code-standard": "^3.0"
