@@ -34,8 +34,6 @@ final class PcntlHandlerRegistry implements HandlerRegistryInterface
      * @param mixed $signinfo
      *
      * @throws SignalException
-     *
-     * @phpcsSuppress SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
      */
     public function handle(int $signo, $signinfo): void
     {
