@@ -38,7 +38,12 @@ final class ForkSystem implements SystemInterface
             throw new SystemException('Failed waiting for a returning process');
         }
 
-        return new Status($pid, pcntl_wexitstatus($status));
+        $exitCode = pcntl_wexitstatus($status);
+        if ($exitCode === false) {
+            throw new SystemException('Failed checking for exit code');
+        }
+
+        return new Status($pid, $exitCode);
     }
 
     /**

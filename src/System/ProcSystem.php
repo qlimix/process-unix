@@ -3,6 +3,7 @@
 namespace Qlimix\Process\System;
 
 use Qlimix\Process\System\Exception\SystemException;
+use function is_array;
 use function posix_kill;
 use function proc_close;
 use function proc_get_status;
@@ -26,7 +27,7 @@ final class ProcSystem implements SystemInterface
     {
         foreach ($this->procs as $index => $proc) {
             $status = proc_get_status($proc);
-            if ($status === false) {
+            if (!is_array($status)) {
                 throw new SystemException('Couldn\'t get proc status');
             }
 
@@ -94,7 +95,7 @@ final class ProcSystem implements SystemInterface
         }
 
         $status = proc_get_status($proc);
-        if ($status === false) {
+        if (!is_array($status)) {
             throw new SystemException('Couldn\'t get proc status');
         }
 

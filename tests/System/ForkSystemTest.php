@@ -25,7 +25,7 @@ final class ForkSystemTest extends TestCase
 
         $this->system = new ForkSystem($this->termination);
 
-        $this->process = getcwd().'/../tests/sleep';
+        $this->process = getcwd().'/tests/sleep';
     }
 
     public function testShouldStatus(): void
