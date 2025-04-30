@@ -39,7 +39,7 @@ final class ForkSystemTest extends TestCase
         $status = $this->system->status();
 
         $this->assertIsObject($status);
-        $this->assertSame($status->getExitCode(), 0);
+        $this->assertSame($status->exitCode, 0);
     }
 
     public function testShouldNull(): void
@@ -68,7 +68,7 @@ final class ForkSystemTest extends TestCase
         $status = $this->system->status();
 
         $this->assertIsObject($status);
-        $this->assertSame($status->getExitCode(), 0);
+        $this->assertSame($status->exitCode, 0);
     }
 
     public function testShouldThrowOnFailedKill(): void
@@ -101,7 +101,7 @@ final class ForkSystemTest extends TestCase
         $status = $this->system->status();
 
         $this->assertIsObject($status);
-        $this->assertSame($status->getExitCode(), 0);
+        $this->assertSame($status->exitCode, 0);
         $this->assertTrue($alive);
     }
 }

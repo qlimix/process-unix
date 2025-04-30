@@ -58,7 +58,7 @@ final class ProcSystemTest extends TestCase
         usleep(1000);
 
         $status = $this->system->status();
-        $this->assertSame($pid, $status->getId());
+        $this->assertSame($pid, $status->id);
     }
 
     public function testShouldThrowOnNoneExistingPidKill(): void
@@ -90,8 +90,8 @@ final class ProcSystemTest extends TestCase
         usleep(100000);
 
         $status = $this->system->status();
-        $this->assertSame($pid, $status->getId());
-        $this->assertSame(0, $status->getExitCode());
+        $this->assertSame($pid, $status->id);
+        $this->assertSame(0, $status->exitCode);
     }
 
     public function testShouldThrowOnNoneExistingPidTerminate(): void

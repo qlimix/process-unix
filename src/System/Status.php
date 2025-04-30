@@ -2,25 +2,9 @@
 
 namespace Qlimix\Process\System;
 
-final class Status
+final readonly class Status
 {
-    private int $id;
-
-    private int $exitCode;
-
-    public function __construct(int $id, int $exitCode)
+    public function __construct(public int $id, public int $exitCode)
     {
-        $this->id = $id;
-        $this->exitCode = $exitCode;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getExitCode(): int
-    {
-        return $this->exitCode;
     }
 }

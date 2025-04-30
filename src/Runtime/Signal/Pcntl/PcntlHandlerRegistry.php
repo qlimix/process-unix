@@ -31,11 +31,9 @@ final class PcntlHandlerRegistry implements HandlerRegistryInterface
     }
 
     /**
-     * @param mixed $signinfo
-     *
      * @throws SignalException
      */
-    public function handle(int $signo, $signinfo): void
+    public function handle(int $signo, mixed $signinfo): void
     {
         if (!isset($this->handlers[$signo])) {
             return;

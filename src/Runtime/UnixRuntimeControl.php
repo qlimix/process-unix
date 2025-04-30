@@ -46,6 +46,6 @@ final class UnixRuntimeControl implements RuntimeControlInterface
     {
         $this->quit = true;
         $this->output->writeLine('Quiting, reason:');
-        $this->output->writeLine($reason->getMessage());
+        $this->output->writeLine($reason->message);
     }
 }

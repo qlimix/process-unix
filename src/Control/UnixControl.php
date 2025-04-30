@@ -9,14 +9,8 @@ use Throwable;
 
 final class UnixControl implements ControlInterface
 {
-    private SystemInterface $system;
-
-    private RegistryInterface $registry;
-
-    public function __construct(SystemInterface $system, RegistryInterface $registry)
+    public function __construct(private SystemInterface $system, private RegistryInterface $registry)
     {
-        $this->system = $system;
-        $this->registry = $registry;
     }
 
     /**
@@ -35,15 +29,15 @@ final class UnixControl implements ControlInterface
         }
 
         try {
-            $process = $this->registry->remove($status->getId());
+            $process = $this->registry->remove($status->id);
 
             return new Status(
-                $process->getRegistryId(),
-                $process->getProcess(),
-                $status->getExitCode() === 0
+                $process->registryId,
+                $process->process,
+                $status->exitCode === 0
             );
         } catch (Throwable $exception) {
-            throw new ControlException('Couldn\'t find pid in process list');
+            throw new ControlException('Couldn\'t find pid in process list', 0, $exception);
         }
     }
 
@@ -81,31 +75,30 @@ final class UnixControl implements ControlInterface
     /**
      * @inheritDoc
      */
-    public function stop(int $pid): void
+    public function stop(int $id): void
     {
         try {
-            $process = $this->registry->get($pid);
-        } catch (Throwable $exception) {
+            $process = $this->registry->get($id);
+        } catch (Throwable) {
             return;
         }
 
         try {
-            $this->system->terminate($process->getProcessId());
+            $this->system->terminate($process->processId);
         } catch (Throwable $exception) {
             throw new ControlException('Failed to stop process', 0, $exception);
         }
     }
 
     /**
-     * @SuppressWarnings(PHPMD.EmptyCatchBlock)
      * @inheritDoc
      */
     public function stopAll(): void
     {
         foreach ($this->registry->getAll() as $process) {
             try {
-                $this->system->terminate($process->getProcessId());
-            } catch (Throwable $exception) {
+                $this->system->terminate($process->processId);
+            } catch (Throwable) {
             }
         }
     }

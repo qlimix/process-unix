@@ -47,9 +47,9 @@ final class UnixProcessControlTest extends TestCase
             ->willReturn($process);
 
         $status = $this->control->status();
-        $this->assertSame(1, $status->getId());
-        $this->assertSame(self::PROCESS, $status->getProcess());
-        $this->assertTrue($status->isSuccess());
+        $this->assertSame(1, $status->id);
+        $this->assertSame(self::PROCESS, $status->process);
+        $this->assertTrue($status->success);
     }
 
     public function testShouldReturnNull(): void

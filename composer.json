@@ -16,13 +16,13 @@
         }
     ],
     "require": {
-        "php": ">7.4",
+        "php": ">=8.4",
         "ext-pcntl": "*",
         "ext-posix": "*",
-        "qlimix/process": "^2.0"
+        "qlimix/process": "dev-upgrade-3.0"
     },
     "require-dev": {
-        "qlimix/code-standard": "^3.0"
+        "qlimix/code-standard": "dev-upgrade-4.0"
     },
     "autoload": {
         "psr-4": {
@@ -35,6 +35,10 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpro/grumphp": true
+        }
     }
 }
