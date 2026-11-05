@@ -1,5 +1,7 @@
 # Process-unix
 
+> **Archived:** this package is no longer maintained.
+
 [![Travis CI](https://api.travis-ci.org/qlimix/process-unix.svg?branch=master)](https://travis-ci.org/qlimix/process-unix)
 [![Coveralls](https://img.shields.io/coveralls/github/qlimix/process-unix.svg)](https://coveralls.io/github/qlimix/process-unix)
 [![Packagist](https://img.shields.io/packagist/v/qlimix/process-unix.svg)](https://packagist.org/packages/qlimix/process-unix)
